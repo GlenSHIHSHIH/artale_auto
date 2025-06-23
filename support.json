@@ -1,0 +1,22 @@
+{
+  "skills": [
+    {
+      "name": "\u96c6\u4e2d\u8853",
+      "key": "a",
+      "hold": 0.5,
+      "interval": 300.0
+    },
+    {
+      "name": "\u5feb\u901f\u4e4b\u7bad",
+      "key": "d",
+      "hold": 0.8,
+      "interval": 300.0
+    },
+    {
+      "name": "\u7121\u5f62\u4e4b\u7bad",
+      "key": "f",
+      "hold": 0.8,
+      "interval": 300.0
+    }
+  ]
+}
