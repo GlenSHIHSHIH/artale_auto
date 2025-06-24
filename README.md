@@ -25,7 +25,7 @@ python main.python
 
 ## 設定教學
 
-![設定畫面](pic\setting.png)
+![https://github.com/GlenSHIHSHIH/artale_auto/blob/master/pic/setting.png](pic\setting.png)
 
 ### 技能
 
