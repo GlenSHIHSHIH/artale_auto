@@ -30,7 +30,7 @@ class HealthMonitor:
     def stop(self):
         self.running = False
         if self.thread and self.thread.is_alive():
-            self.thread.join(timeout=3)
+            self.thread.join(timeout=1)
 
     def preprocess_image(self, img):
         img = img.resize((img.width * 2, img.height * 2))
@@ -95,7 +95,7 @@ class HealthMonitor:
 
             except Exception:
                 self.update_callback(f"OCR error: {text}")
-                time.sleep(0.5)
+                time.sleep(0.2)
                 continue
 
             self.update_callback(f"{current_hp:.0f}/{max_hp:.0f} | {percent:.1f}%")
@@ -114,4 +114,4 @@ class HealthMonitor:
                     self.update_callback(f"{current_hp:.0f}/{max_hp:.0f} | {percent:.1f}%")
                     time.sleep(0.1)
 
-            time.sleep(0.5)
+            time.sleep(0.4)
