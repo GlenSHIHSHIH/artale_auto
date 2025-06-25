@@ -75,11 +75,11 @@ class HealthMonitor:
         # 移除换行和多余空格
         cleaned = cleaned.replace('\n', '').replace('\r', '').replace(' ', '').strip()
         
-        print(f"清理后文本: '{cleaned}'")
+        #print(f"清理后文本: '{cleaned}'")
         
         # 检查文本长度，确保至少有4个字符才能移除前3后1
         if len(cleaned) < 7:
-            # print("文本太短，无法移除前綴與後1位")
+            # #print("文本太短，无法移除前綴與後1位")
             return None, None
         
         index = cleaned.rfind('[')
@@ -92,7 +92,7 @@ class HealthMonitor:
         
         # 只保留数字和斜杠
         numbers_only = re.sub(r'[^\d/]', '', trimmed)
-        # print(f"只保留数字: '{numbers_only}'")
+        # #print(f"只保留数字: '{numbers_only}'")
         
         # 寻找 数字/数字 的模式
         hp_pattern = r'(\d+)/(\d+)'
@@ -111,17 +111,17 @@ class HealthMonitor:
                 
                 # 最终验证
                 if 0 <= current_hp <= max_hp:
-                    print(f"結果: {current_hp}/{max_hp}")
+                    #print(f"結果: {current_hp}/{max_hp}")
                     return current_hp, max_hp
                 else:
-                    print(f"數值不合理: {current_hp}/{max_hp}")
+                    #print(f"數值不合理: {current_hp}/{max_hp}")
                     return None, None
                     
             except ValueError as e:
-                print(f"數值轉換錯誤: {e}")
+                #print(f"數值轉換錯誤: {e}")
                 return None, None
         else:
-            print("未找到數值格式")
+            #print("未找到數值格式")
             return None, None
 
     def loop(self):
@@ -146,10 +146,10 @@ class HealthMonitor:
                     processed_img,
                     config="--oem 1 --psm 6 -c tessedit_char_whitelist=0123456789/[]HPMPabcdefghijklmnopqrstuvwxyz",
                 ).strip()
-                # print(f"ocr识别: '{full_text}'")
+                # #print(f"ocr识别: '{full_text}'")
                 
             except Exception as e:
-                print(f"OCR错误: {e}")
+                #print(f"OCR错误: {e}")
                 self.update_callback("OCR Error")
                 time.sleep(1)
                 continue

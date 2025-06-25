@@ -24,7 +24,7 @@ class Skill:
     def loop(self):
         while self.running:
             with Skill.lock:
-                print(f"執行技能: {self.name}")
+                #print(f"執行技能: {self.name}")
                 pyautogui.keyDown(self.key)
                 time.sleep(self.hold)
                 pyautogui.keyUp(self.key)
