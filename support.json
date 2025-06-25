@@ -22,26 +22,24 @@
   "ocr": {
     "pref_var": "Maple",
     "region": [
-      509,
-      1069,
-      639,
-      1099
+      483,
+      982,
+      620,
+      1009
     ],
-    "mode_var": "%_below",
     "th_var": 40.0,
     "target_var": 60.0,
-    "key_var": "Delete",
+    "key_var": "",
     "heal_value_var": 300,
     "mana_region": [
-      732,
-      1069,
-      887,
-      1099
+      708,
+      982,
+      838,
+      1009
     ],
-    "mana_mode_var": "%_below",
     "mana_th_var": 10.0,
     "mana_target_var": 20.0,
-    "mana_key_var": "End",
+    "mana_key_var": "",
     "mana_value_var": 300
   }
 }

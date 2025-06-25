@@ -106,14 +106,12 @@ class SkillManager(ctk.CTkFrame):
             "ocr": {
                 "pref_var": master.pref_var.get(),
                 "region": master.region,
-                "mode_var": master.mode_var.get(),
                 "th_var": master.th_var.get(),
                 "target_var": master.target_var.get(),
                 "key_var": master.key_var.get(),
                 "heal_value_var": master.heal_value_var.get(),
 
                 "mana_region": master.mana_region,
-                "mana_mode_var": master.mana_mode_var.get(),
                 "mana_th_var": master.mana_th_var.get(),
                 "mana_target_var": master.mana_target_var.get(),
                 "mana_key_var": master.mana_key_var.get(),
@@ -177,7 +175,6 @@ class SkillCasterApp(ctk.CTk):
         self.region_btn = ctk.CTkButton(frm1, text="設定補血截圖區域", command=self.pick_region)
         self.region_btn.pack(anchor="w", pady=2)
 
-        self.mode_var = ctk.StringVar(value="%_below")
         self.th_var = ctk.DoubleVar(value=50.0)
         self.target_var = ctk.DoubleVar(value=80.0)
         self.key_var = ctk.StringVar(value="Delete")
@@ -205,7 +202,6 @@ class SkillCasterApp(ctk.CTk):
         self.mana_region_btn = ctk.CTkButton(frm2, text="設定補魔截圖區域", command=self.pick_mana_region)
         self.mana_region_btn.pack(anchor="w", pady=2)
 
-        self.mana_mode_var = ctk.StringVar(value="%_below")
         self.mana_th_var = ctk.DoubleVar(value=40.0)
         self.mana_target_var = ctk.DoubleVar(value=85.0)
         self.mana_key_var = ctk.StringVar(value="End")
@@ -315,19 +311,19 @@ class SkillCasterApp(ctk.CTk):
     def start_monitor(self):
         self.monitor = HealthMonitor(
             self.pref_var.get(), self.region,
-            self.mode_var.get(), self.th_var.get(),
-            self.target_var.get(), self.key_var.get(),
-            self.update_status, self.heal_value_var.get()
+            self.th_var.get(),self.target_var.get(),
+            self.key_var.get(),self.update_status,
+            self.heal_value_var.get()
         )
         self.monitor.start()
         self.toggle_btn.configure(text="F6 停止 OCR 補血")
 
     def start_mana_monitor(self):
         self.mana_monitor = HealthMonitor(
-            self.pref_var.get(), self.mana_region,
-            self.mana_mode_var.get(), self.mana_th_var.get(),
-            self.mana_target_var.get(), self.mana_key_var.get(),
-            self.update_mana_status, self.mana_value_var.get()
+            self.pref_var.get(),self.mana_region,
+            self.mana_th_var.get(),self.mana_target_var.get(),
+            self.mana_key_var.get(),self.update_mana_status,
+            self.mana_value_var.get()
         )
         self.mana_monitor.start()
         self.toggle_mana_btn.configure(text="F7 停止 OCR 補魔")
@@ -335,14 +331,12 @@ class SkillCasterApp(ctk.CTk):
     def load_ocr_settings(self, ocr_data):
         self.pref_var.set(ocr_data.get("pref_var", "Maple"))
         self.region = tuple(ocr_data.get("region", (0, 0, 200, 50)))
-        self.mode_var.set(ocr_data.get("mode_var", "%_below"))
         self.th_var.set(ocr_data.get("th_var", 50.0))
         self.target_var.set(ocr_data.get("target_var", 80.0))
         self.key_var.set(ocr_data.get("key_var", "Delete"))
         self.heal_value_var.set(ocr_data.get("heal_value_var", 300))
 
         self.mana_region = tuple(ocr_data.get("mana_region", (0, 60, 200, 110)))
-        self.mana_mode_var.set(ocr_data.get("mana_mode_var", "%_below"))
         self.mana_th_var.set(ocr_data.get("mana_th_var", 40.0))
         self.mana_target_var.set(ocr_data.get("mana_target_var", 85.0))
         self.mana_key_var.set(ocr_data.get("mana_key_var", "End"))
