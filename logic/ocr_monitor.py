@@ -159,7 +159,7 @@ class HealthMonitor:
             # 从完整文本中提取HP数值（移除前3后1）
             current_hp, max_hp = self.extract_hp_from_text(full_text)
             
-            if current_hp is None or max_hp is None:
+            if current_hp is None or max_hp is None or current_hp <= 0:
                 self.update_callback(f"解析失败: {full_text}")
                 time.sleep(0.5)
                 continue
