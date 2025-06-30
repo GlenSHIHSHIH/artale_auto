@@ -22,20 +22,20 @@
   "ocr": {
     "pref_var": "Maple",
     "region": [
-      539,
-      1030,
-      679,
-      1059
+      474,
+      1016,
+      618,
+      1049
     ],
     "th_var": 40.0,
     "target_var": 60.0,
     "key_var": "Delete",
     "heal_value_var": 300,
     "mana_region": [
-      766,
-      1030,
-      904,
-      1061
+      697,
+      1018,
+      842,
+      1048
     ],
     "mana_th_var": 10.0,
     "mana_target_var": 20.0,

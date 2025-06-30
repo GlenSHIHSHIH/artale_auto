@@ -75,24 +75,28 @@ class HealthMonitor:
         # 移除换行和多余空格
         cleaned = cleaned.replace('\n', '').replace('\r', '').replace(' ', '').strip()
         
-        #print(f"清理后文本: '{cleaned}'")
+        # print(f"清理后文本: '{cleaned}'")
         
         # 检查文本长度，确保至少有4个字符才能移除前3后1
         if len(cleaned) < 7:
             # #print("文本太短，无法移除前綴與後1位")
             return None, None
         
-        index = cleaned.rfind('[')
+        fromIndex  = cleaned.rfind('[')
         
-        if index == -1:
-            index = next((i for i, c in enumerate(cleaned) if c.isdigit()), -1)  
-            index+1         
+        if fromIndex  == -1:
+            fromIndex  = next((i for i, c in enumerate(cleaned) if c.isdigit()), -1)  
+            fromIndex +1         
 
-        trimmed = cleaned[index:-1]
+        toIndex  = cleaned.rfind(']')
+        if toIndex  == -1:
+            toIndex = next((i for i, c in reversed(list(enumerate(cleaned))) if c.isdigit()), -1)
+        # print(f"fromIndex: '{fromIndex}' , endIndex: '{toIndex}'")
+        trimmed = cleaned[fromIndex : toIndex]
         
         # 只保留数字和斜杠
         numbers_only = re.sub(r'[^\d/]', '', trimmed)
-        # #print(f"只保留数字: '{numbers_only}'")
+        # print(f"只保留数字: '{numbers_only}'")
         
         # 寻找 数字/数字 的模式
         hp_pattern = r'(\d+)/(\d+)'
