@@ -79,8 +79,8 @@ class HealthMonitor:
         # 移除换行和多余空格
         cleaned = cleaned.replace('\n', '').replace('\r', '').replace(' ', '').strip()
         
-        print(f"清理前文本: '{raw_text}'")
-        print(f"清理後文本: '{cleaned}'")
+        # print(f"清理前文本: '{raw_text}'")
+        # print(f"清理後文本: '{cleaned}'")
         
         # 检查文本长度，确保至少有4个字符才能移除前3后1
         if any("/" in item for item in cleaned)== False:
@@ -97,12 +97,12 @@ class HealthMonitor:
             toIndex = next((i for i, c in reversed(list(enumerate(cleaned))) if c.isdigit()), -1)
         trimmed = cleaned[fromIndex : toIndex]
 
-        print(f"fromIndex: '{fromIndex}' , endIndex: '{toIndex}'")
+        # print(f"fromIndex: '{fromIndex}' , endIndex: '{toIndex}'")
         
         # 只保留数字和斜杠
         numbers_only = re.sub(r'[^\d/]', '', trimmed)
 
-        print(f"只保留数字: '{numbers_only}'")
+        # print(f"只保留数字: '{numbers_only}'")
         
         # 寻找 数字/数字 的模式
         hp_pattern = r'(\d+)/(\d+)'
@@ -165,7 +165,7 @@ class HealthMonitor:
                     # config = r'--oem 1 --psm 7 -c tessedit_char_whitelist=0123456789/[]HPMPabcdefghijklmnopqrstuvwxyz'
                 ).strip()
 
-                print(f"ocr识别: '{full_text}'")
+                # print(f"ocr识别: '{full_text}'")
                 
             except Exception as e:
                 #print(f"OCR错误: {e}")
