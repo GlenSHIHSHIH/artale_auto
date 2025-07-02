@@ -1,3 +1,4 @@
+from datetime import datetime
 import threading, time, pytesseract, pyautogui, logging, math, re
 from PIL import ImageGrab, ImageEnhance, ImageOps, Image, ImageFilter
 import pygetwindow as gw
@@ -7,13 +8,14 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 logging.basicConfig(level=logging.INFO, filename="ocr_heal.log", format="%(asctime)s %(message)s")
 
 class HealthMonitor:
-    def __init__(self, win_prefix, region, threshold, target, key, update_callback, heal_value):
+    def __init__(self, win_prefix, region, threshold, target, key, update_callback,scan_callback, heal_value):
         self.win_prefix = win_prefix
         self.region = region
         self.threshold = threshold
         self.target = target
         self.key = key
         self.update_callback = update_callback
+        self.scan_callback = scan_callback
         self.heal_value = heal_value
         self.running = False
         self.thread = None
@@ -34,20 +36,22 @@ class HealthMonitor:
     def preprocess_image(self, img):
         """简化的图像预处理"""
         # 放大图像
-        img = img.resize((img.width * 4, img.height * 4), Image.LANCZOS)
+        img = img.resize((img.width * 6, img.height * 6), Image.LANCZOS)
         
         # 转灰度
         img = img.convert("L")
         
         # 增强对比度
-        img = ImageEnhance.Contrast(img).enhance(3.0)
+        img = ImageEnhance.Contrast(img).enhance(0.9)
         
         # 锐化
         img = ImageEnhance.Sharpness(img).enhance(2.0)
         
         # 简单二值化
-        img = img.point(lambda x: 0 if x < 120 else 255, "L")
+        img = img.point(lambda x: 0 if x < 120 else 255, "1")
         
+        # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # img.save(f"processed_{timestamp}.png")
         return img
 
     def extract_hp_from_text(self, raw_text):
@@ -56,7 +60,7 @@ class HealthMonitor:
         
         # 处理常见误识别
         replacements = {
-            'i': '1','I': '1', 
+            'i': '1','I': '1', 'l': '1', 
             'E': '2',
             'c': '3','E': '2',
             'z': '2','Z': '2',
@@ -75,28 +79,30 @@ class HealthMonitor:
         # 移除换行和多余空格
         cleaned = cleaned.replace('\n', '').replace('\r', '').replace(' ', '').strip()
         
-        # print(f"清理后文本: '{cleaned}'")
+        print(f"清理前文本: '{raw_text}'")
+        print(f"清理後文本: '{cleaned}'")
         
         # 检查文本长度，确保至少有4个字符才能移除前3后1
-        if len(cleaned) < 7:
+        if any("/" in item for item in cleaned)== False:
             # #print("文本太短，无法移除前綴與後1位")
             return None, None
         
         fromIndex  = cleaned.rfind('[')
-        
         if fromIndex  == -1:
             fromIndex  = next((i for i, c in enumerate(cleaned) if c.isdigit()), -1)  
-            fromIndex +1         
+            fromIndex += 1
 
         toIndex  = cleaned.rfind(']')
         if toIndex  == -1:
             toIndex = next((i for i, c in reversed(list(enumerate(cleaned))) if c.isdigit()), -1)
-        # print(f"fromIndex: '{fromIndex}' , endIndex: '{toIndex}'")
         trimmed = cleaned[fromIndex : toIndex]
+
+        print(f"fromIndex: '{fromIndex}' , endIndex: '{toIndex}'")
         
         # 只保留数字和斜杠
         numbers_only = re.sub(r'[^\d/]', '', trimmed)
-        # print(f"只保留数字: '{numbers_only}'")
+
+        print(f"只保留数字: '{numbers_only}'")
         
         # 寻找 数字/数字 的模式
         hp_pattern = r'(\d+)/(\d+)'
@@ -115,16 +121,20 @@ class HealthMonitor:
                 
                 # 最终验证
                 if 0 <= current_hp <= max_hp:
+                    self.scan_callback(f"結果: {current_hp}/{max_hp}")
                     #print(f"結果: {current_hp}/{max_hp}")
                     return current_hp, max_hp
                 else:
+                    self.scan_callback(f"數值不合理: {current_hp}/{max_hp}")
                     #print(f"數值不合理: {current_hp}/{max_hp}")
                     return None, None
                     
             except ValueError as e:
+                self.scan_callback(f"數值轉換錯誤: {e}, {current_hp}/{max_hp}")
                 #print(f"數值轉換錯誤: {e}")
                 return None, None
         else:
+            self.scan_callback(f"未找到數值格式, {match}")
             #print("未找到數值格式")
             return None, None
 
@@ -148,24 +158,25 @@ class HealthMonitor:
                 # 如果第一种方法失败，尝试第二种配置
                 full_text = pytesseract.image_to_string(
                     processed_img,
-                    config="--oem 1 --psm 6 -c tessedit_char_whitelist=0123456789/[]HPMPabcdefghijklmnopqrstuvwxyz",
+                    # config="--oem 1 --psm 6 -c tessedit_char_whitelist=0123456789/[]HPMPabcdefghijklmnopqrstuvwxyz",
+                    config="--oem 3 --psm 6 -c tessedit_char_whitelist=0123456789/[]HPMPabcdefghijklmnopqrstuvwxyz",
+                    # config = r'--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789/[]HPMPabcdefghijklmnopqrstuvwxyz'
+                    # config = r'--oem 2 --psm 7 -c tessedit_char_whitelist=0123456789/[]HPMPabcdefghijklmnopqrstuvwxyz'
+                    # config = r'--oem 1 --psm 7 -c tessedit_char_whitelist=0123456789/[]HPMPabcdefghijklmnopqrstuvwxyz'
                 ).strip()
-                # #print(f"ocr识别: '{full_text}'")
+
+                print(f"ocr识别: '{full_text}'")
                 
             except Exception as e:
                 #print(f"OCR错误: {e}")
                 self.update_callback("OCR Error")
-                time.sleep(1)
                 continue
-
-            
 
             # 从完整文本中提取HP数值（移除前3后1）
             current_hp, max_hp = self.extract_hp_from_text(full_text)
             
             if current_hp is None or max_hp is None or current_hp <= 0:
-                self.update_callback(f"解析失败: {full_text}")
-                time.sleep(0.5)
+                self.update_callback(f"解析失敗: {full_text}")
                 continue
             
             percent = (current_hp / max_hp) * 100            
@@ -184,5 +195,3 @@ class HealthMonitor:
                     pyautogui.press(self.key)
                     current_hp += self.heal_value
                     time.sleep(0.1)
-
-            time.sleep(0.5)

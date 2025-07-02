@@ -151,7 +151,7 @@ class SkillCasterApp(ctk.CTk):
         
         self.all_running = False  # F5 狀態記憶
         self.title("技能 + OCR 補血補魔器")
-        self.geometry("600x850")
+        self.geometry("600x950")
 
         self.monitor = None
         self.mana_monitor = None
@@ -195,6 +195,9 @@ class SkillCasterApp(ctk.CTk):
         self.status_var = ctk.StringVar(value="血量: N/A")
         ctk.CTkLabel(frm1, textvariable=self.status_var).pack(anchor="w", pady=5)
 
+        self.scan_var = ctk.StringVar(value="偵測: N/A")
+        ctk.CTkLabel(frm1, textvariable=self.scan_var).pack(anchor="w", pady=5)
+
         frm2 = ctk.CTkFrame(frame_main)
         frm2.pack(side="right", padx=10, fill="both", expand=True)
         ctk.CTkLabel(frm2, text="OCR 補魔設定").pack(anchor="w")
@@ -221,6 +224,9 @@ class SkillCasterApp(ctk.CTk):
 
         self.mana_status_var = ctk.StringVar(value="魔力: N/A")
         ctk.CTkLabel(frm2, textvariable=self.mana_status_var).pack(anchor="w", pady=5)
+
+        self.mana_scan_var = ctk.StringVar(value="偵測: N/A")
+        ctk.CTkLabel(frm2, textvariable=self.mana_scan_var).pack(anchor="w", pady=5)
 
         btn_frame = ctk.CTkFrame(self)
         btn_frame.pack(fill="x", pady=10)
@@ -269,6 +275,12 @@ class SkillCasterApp(ctk.CTk):
         coord_text = f"座標: {self.mana_region}"
         self.mana_status_var.set(f"{coord_text} \n魔力: {text}")
 
+    def update_mana_scan(self, text):
+        self.mana_scan_var.set(f"偵測: {text}")
+    
+    def update_scan(self, text):
+        self.scan_var.set(f"偵測: {text}")
+
     def toggle_monitor(self):
         if self.monitor and self.monitor.running:
             self.monitor.stop()
@@ -313,7 +325,7 @@ class SkillCasterApp(ctk.CTk):
             self.pref_var.get(), self.region,
             self.th_var.get(),self.target_var.get(),
             self.key_var.get(),self.update_status,
-            self.heal_value_var.get()
+            self.update_scan,self.heal_value_var.get()
         )
         self.monitor.start()
         self.toggle_btn.configure(text="F6 停止 OCR 補血")
@@ -323,7 +335,7 @@ class SkillCasterApp(ctk.CTk):
             self.pref_var.get(),self.mana_region,
             self.mana_th_var.get(),self.mana_target_var.get(),
             self.mana_key_var.get(),self.update_mana_status,
-            self.mana_value_var.get()
+            self.update_mana_scan,self.mana_value_var.get()
         )
         self.mana_monitor.start()
         self.toggle_mana_btn.configure(text="F7 停止 OCR 補魔")

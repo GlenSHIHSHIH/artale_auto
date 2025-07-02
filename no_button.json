@@ -1,0 +1,45 @@
+{
+  "skills": [
+    {
+      "name": "\u96c6\u4e2d\u8853",
+      "key": "a",
+      "hold": 0.5,
+      "interval": 298.0
+    },
+    {
+      "name": "\u5feb\u901f\u4e4b\u7bad",
+      "key": "d",
+      "hold": 0.8,
+      "interval": 298.0
+    },
+    {
+      "name": "\u7121\u5f62\u4e4b\u7bad",
+      "key": "f",
+      "hold": 0.8,
+      "interval": 298.0
+    }
+  ],
+  "ocr": {
+    "pref_var": "Maple",
+    "region": [
+      473,
+      1026,
+      610,
+      1055
+    ],
+    "th_var": 40.0,
+    "target_var": 60.0,
+    "key_var": "",
+    "heal_value_var": 300,
+    "mana_region": [
+      695,
+      1022,
+      835,
+      1053
+    ],
+    "mana_th_var": 10.0,
+    "mana_target_var": 20.0,
+    "mana_key_var": "",
+    "mana_value_var": 300
+  }
+}
