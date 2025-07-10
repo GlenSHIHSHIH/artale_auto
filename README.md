@@ -5,6 +5,9 @@
 1.python
 https://www.python.org/downloads/
 
+python 套件安裝
+pip install pytesseract pyautogui pillow pygetwindow customtkinter keyboard
+
 2.tesseract(OCR)
 
 ```
@@ -21,7 +24,7 @@ set PATH=%PATH%;"C:\Program Files\Tesseract-OCR"
 
 ## 執行檔案
 
-python main.python
+python main.py
 
 ## 設定教學
 

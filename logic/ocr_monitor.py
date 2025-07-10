@@ -157,7 +157,8 @@ class HealthMonitor:
                 
                 # 如果第一种方法失败，尝试第二种配置
                 full_text = pytesseract.image_to_string(
-                    processed_img,
+                    processed_img, 
+                    lang='eng',
                     # config="--oem 1 --psm 6 -c tessedit_char_whitelist=0123456789/[]HPMPabcdefghijklmnopqrstuvwxyz",
                     config="--oem 3 --psm 6 -c tessedit_char_whitelist=0123456789/[]HPMPabcdefghijklmnopqrstuvwxyz",
                     # config = r'--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789/[]HPMPabcdefghijklmnopqrstuvwxyz'
